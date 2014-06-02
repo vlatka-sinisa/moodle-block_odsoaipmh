@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="blocks/odsoaipmh/db" VERSION="2014051212" COMMENT="XMLDB file for Moodle blocks/odsoaipmh"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="block_odsoaipmh" COMMENT="ODS OAI PMH cache table">
+      <FIELDS>
+        <FIELD NAME="id"            TYPE="int"  LENGTH="10"     NOTNULL="true"  SEQUENCE="true"                                                                                                                     NEXT="uniq_id"/>
+        <FIELD NAME="uniq_id"       TYPE="text"                 NOTNULL="true"  SEQUENCE="false" COMMENT="Unique generated ID for the element"                                          PREVIOUS="id"               NEXT="type"/>
+        <FIELD NAME="type"          TYPE="text"                 NOTNULL="true"  SEQUENCE="false" COMMENT="Type of the element (eg. &quot;Course&quot;, &quot;Questioneer&quot;, ...)"   PREVIOUS="uniq_id"          NEXT="moodle_id"/>
+        <FIELD NAME="moodle_id"     TYPE="int"  LENGTH="10"     NOTNULL="true"  SEQUENCE="false" COMMENT="Moodle ID of the element (eg. course ID, Quiz ID, ...)"                       PREVIOUS="type"             NEXT="deleted"/>
+        <FIELD NAME="deleted"       TYPE="char" LENGTH="1"      NOTNULL="true"  SEQUENCE="false" COMMENT="Is the element deleted"                                                       PREVIOUS="moodle_id"        NEXT="title"/>
+        <FIELD NAME="title"         TYPE="text"                 NOTNULL="true"  SEQUENCE="false" COMMENT="Title of the element"                                                         PREVIOUS="deleted"          NEXT="description"/>
+        <FIELD NAME="description"   TYPE="text"                 NOTNULL="true"  SEQUENCE="false" COMMENT="Description of the element"                                                   PREVIOUS="title"            NEXT="language"/>
+        <FIELD NAME="language"      TYPE="text"                 NOTNULL="true"  SEQUENCE="false" COMMENT="Language of the element"                                                      PREVIOUS="description"      NEXT="uri"/>
+        <FIELD NAME="uri"           TYPE="text"                 NOTNULL="true"  SEQUENCE="false" COMMENT="Base URI of the element"                                                      PREVIOUS="language"         NEXT="license_en"/>
+        <FIELD NAME="license_en"    TYPE="text"                 NOTNULL="true"  SEQUENCE="false" COMMENT="License in english"                                                           PREVIOUS="uri"              NEXT="licencs_local"/>
+        <FIELD NAME="license_local" TYPE="text"                 NOTNULL="true"  SEQUENCE="false" COMMENT="License in local language"                                                    PREVIOUS="license_en"       NEXT="taxonomy"/>
+        <FIELD NAME="taxonomy"      TYPE="text"                 NOTNULL="true"  SEQUENCE="false" COMMENT="Taxonomy values, comma separated"                                             PREVIOUS="license_local"    NEXT="datestamp"/>
+        <FIELD NAME="datestamp"     TYPE="datetime"             NOTNULL="true"  SEQUENCE="false" COMMENT="Timestamp of added"                                                           PREVIOUS="taxonomy"  />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>
