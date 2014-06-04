@@ -615,9 +615,9 @@ function getData(){
         if(count($result_cnt) == 1){
             $ak = array_keys($result_cnt);
             $retVal['cnt'] = reset($ak);
-            $sql = 'SELECT * FROM {block_odsoaipmh} WHERE datestamp BETWEEN ? AND ? AND '.$DB->sql_compare_text('uniq_id', 20) ." <> ". $DB->sql_compare_text('?', 20).'  ORDER BY id LIMIT ? OFFSET ?';
+            $sql = 'SELECT * FROM {block_odsoaipmh} WHERE datestamp BETWEEN ? AND ? AND '.$DB->sql_compare_text('uniq_id', 20) ." <> ". $DB->sql_compare_text('?', 20).'  ORDER BY id LIMIT '.$limit.' OFFSET '.($offset*$limit);
             $result = $DB->get_records_sql($sql,
-                                            array( $where['from'], $where['to'], "__GENERATED_ID", $limit, $offset*$limit ));
+                                            array( $where['from'], $where['to'], "__GENERATED_ID", $limit, intval($offset*$limit) ));
 
             foreach($result as &$r){
                 $r->unixts = strtotime($r->datestamp);
