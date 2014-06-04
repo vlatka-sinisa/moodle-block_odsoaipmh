@@ -545,10 +545,15 @@ function getData(){
             $retVal['error'] = "Invalid record identifier";
         }
 
-        $result = $DB->get_records_sql('SELECT *, extract(epoch from datestamp) as unixts FROM {block_odsoaipmh} WHERE uniq_id=?', array( $item[2] ));
+        $result = $DB->get_records_sql('SELECT *
+                                            --, extract(epoch from datestamp) as unixts
+                                        FROM {block_odsoaipmh} WHERE uniq_id=?', array( $item[2] ));
 
         if(count($result) == 1){
             $retVal['ok'] = true;
+            foreach($result as &$r){
+                $r->unixts = strtotime($r->datestamp);
+            }
             $retVal['data'] = $result;
         }else{
             $retVal['ok'] = false;
@@ -610,9 +615,13 @@ function getData(){
         if(count($result_cnt) == 1){
             $ak = array_keys($result_cnt);
             $retVal['cnt'] = reset($ak);
-            $sql = 'SELECT *, extract(epoch from datestamp) as unixts FROM {block_odsoaipmh} WHERE datestamp BETWEEN ? AND ? AND '.$DB->sql_compare_text('uniq_id', 20) ." <> ". $DB->sql_compare_text('?', 20).' ORDER BY id LIMIT ? OFFSET ?';
+            $sql = 'SELECT * FROM {block_odsoaipmh} WHERE datestamp BETWEEN ? AND ? AND '.$DB->sql_compare_text('uniq_id', 20) ." <> ". $DB->sql_compare_text('?', 20).'  ORDER BY id LIMIT ? OFFSET ?';
             $result = $DB->get_records_sql($sql,
                                             array( $where['from'], $where['to'], "__GENERATED_ID", $limit, $offset*$limit ));
+
+            foreach($result as &$r){
+                $r->unixts = strtotime($r->datestamp);
+            }
 
             $retVal['ok'] = true;
             $retVal['data'] = $result;
