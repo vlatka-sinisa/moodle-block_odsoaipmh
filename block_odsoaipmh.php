@@ -28,8 +28,8 @@
 //  http://dabih.carnet.hr/oai/?verb=ListRecords&dbg=1&metadataPrefix=oai_lom
 
 defined('MOODLE_INTERNAL') || die();
-require_once('config.php');
-require_once('moodle_pre_24.php');
+include_once('config.php');
+include_once('moodle_pre_24.php');
 
 
 class block_odsoaipmh extends block_base {
@@ -143,7 +143,11 @@ class block_odsoaipmh extends block_base {
                                  ;
 
             // Harvested Moodle modules
-            $modules = get_module_types_names();
+            if(!function_exists("get_module_types_names")){
+                $modules = moodle_pre24_get_module_types_names();
+            }else{
+                $modules = get_module_types_names();
+            }
             $shareType = $this->config->c_share_type;
             switch($shareType){
                 case 1: // System defaults

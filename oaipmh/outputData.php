@@ -23,7 +23,7 @@
  */
 
 defined('_OAIPMH_DEFINED') || die();
-require_once('../config.php');
+include_once('../config.php');
 
 
 /**

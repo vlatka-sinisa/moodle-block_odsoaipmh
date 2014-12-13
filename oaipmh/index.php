@@ -22,14 +22,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require (dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
+include_once (dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
 define("_OAIPMH_DEFINED", 1);
 error_reporting(E_ALL);
 
-require_once('../config.php');
+include_once('../config.php');
 global $_CFG_MODULE_OAIPMH;
-include("getData.php");
-include("outputData.php");
+include_once("getData.php");
+include_once("outputData.php");
 
 if(!checkIfAllowed(get_config($_CFG_MODULE_OAIPMH->modulename, "allowed_ip"))){
     global $error;

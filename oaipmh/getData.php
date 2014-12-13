@@ -349,8 +349,16 @@ function getAllDataFromMoodle(){
             if(!$systemConfig['shared']){
                 continue;
             }
-            $harvestAll = $systemConfig['share_all'];
-            $sharedModules = $systemConfig['modules'];
+            if(array_key_exists('share_all', $systemConfig)) {
+                $harvestAll = $systemConfig['share_all'];
+            }else{
+                $harvestAll = false;
+            }
+            if(array_key_exists('modules', $systemConfig)) {
+                $sharedModules = $systemConfig['modules'];
+            }else{
+                $sharedModules = array();
+            }
         }else{
             // Use course specific settings, if not shared, then skip
             if(!$moduleCfg['shared']){
@@ -400,8 +408,13 @@ function getAllDataFromMoodle(){
         // Items in courses (select is done course by course)
         $retVal[] = $data;
         $p = get_fast_modinfo($c);
-        $l = $p->get_instances();
-        // var_dump($p->get_instances_of("block_odsoaipmh"));
+        if(method_exists($p, "get_instances")) {
+            $l = $p->get_instances();
+        }else if(is_array($p) && array_key_exists('instances', $p)){
+            $l = $p['instances'];
+        }else{
+            $l = array();
+        }
 
         foreach($l as $type=>$instance){
             foreach($instance as $cm_instance){
@@ -545,10 +558,15 @@ function getData(){
             $retVal['error'] = "Invalid record identifier";
         }
 
-        $result = $DB->get_records_sql('SELECT *, extract(epoch from datestamp) as unixts FROM {block_odsoaipmh} WHERE uniq_id=?', array( $item[2] ));
+        $result = $DB->get_records_sql('SELECT *
+                                            --, extract(epoch from datestamp) as unixts
+                                        FROM {block_odsoaipmh} WHERE uniq_id=?', array( $item[2] ));
 
         if(count($result) == 1){
             $retVal['ok'] = true;
+            foreach($result as &$r){
+                $r->unixts = strtotime($r->datestamp);
+            }
             $retVal['data'] = $result;
         }else{
             $retVal['ok'] = false;
@@ -610,9 +628,13 @@ function getData(){
         if(count($result_cnt) == 1){
             $ak = array_keys($result_cnt);
             $retVal['cnt'] = reset($ak);
-            $sql = 'SELECT *, extract(epoch from datestamp) as unixts FROM {block_odsoaipmh} WHERE datestamp BETWEEN ? AND ? AND '.$DB->sql_compare_text('uniq_id', 20) ." <> ". $DB->sql_compare_text('?', 20).' ORDER BY id LIMIT ? OFFSET ?';
+            $sql = 'SELECT * FROM {block_odsoaipmh} WHERE datestamp BETWEEN ? AND ? AND '.$DB->sql_compare_text('uniq_id', 20) ." <> ". $DB->sql_compare_text('?', 20).'  ORDER BY id LIMIT '.$limit.' OFFSET '.($offset*$limit);
             $result = $DB->get_records_sql($sql,
-                                            array( $where['from'], $where['to'], "__GENERATED_ID", $limit, $offset*$limit ));
+                                            array( $where['from'], $where['to'], "__GENERATED_ID", $limit, intval($offset*$limit) ));
+
+            foreach($result as &$r){
+                $r->unixts = strtotime($r->datestamp);
+            }
 
             $retVal['ok'] = true;
             $retVal['data'] = $result;

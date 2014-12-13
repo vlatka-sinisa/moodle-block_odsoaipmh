@@ -22,8 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once('config.php');
-require_once('moodle_pre_24.php');
+include_once('config.php');
+include_once('moodle_pre_24.php');
 
 class block_odsoaipmh_edit_form extends block_edit_form {
 
@@ -52,7 +52,11 @@ class block_odsoaipmh_edit_form extends block_edit_form {
                             ));
 
 
-        $modules = get_module_types_names();
+        if(!function_exists("get_module_types_names")){
+            $modules = moodle_pre24_get_module_types_names();
+        }else{
+            $modules = get_module_types_names();
+        }
         $limitedShare = (get_config($_CFG_MODULE_OAIPMH->modulename, "limited_share") == "1");
         if($limitedShare){
             $selModules = get_config($_CFG_MODULE_OAIPMH->modulename, "shared_modules");

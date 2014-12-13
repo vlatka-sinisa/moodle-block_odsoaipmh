@@ -23,8 +23,8 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-include("config.php");
-include("moodle_pre_24.php");
+include_once("config.php");
+include_once("moodle_pre_24.php");
 global $_CFG_MODULE_OAIPMH, $CFG;
 
 // ----------------------------------
@@ -75,11 +75,17 @@ $settings->add(new admin_setting_configcheckbox('odsoaipmh/limited_share',
                                          0
                                         ));
 
+if(!function_exists("get_module_types_names")){
+    $modules = moodle_pre24_get_module_types_names();
+}else{
+    $modules = get_module_types_names();
+}
+
 $settings->add(new admin_setting_configmulticheckbox('odsoaipmh/shared_modules',
                                          get_string('label_shared_modules', $_CFG_MODULE_OAIPMH->block_modulename),
                                          get_string('desc_shared_modules', $_CFG_MODULE_OAIPMH->block_modulename),
                                          array(),
-                                         get_module_types_names()
+                                         $modules
                                         ));
 
 // ----------------------------------
@@ -127,7 +133,7 @@ $settings->add(new admin_setting_configtext('odsoaipmh/default_language',
                                                 get_string('desc_default_language', $_CFG_MODULE_OAIPMH->block_modulename),
                                                 "en"));
 
-require_once('moodle_pre_24.php');
+include_once('moodle_pre_24.php');
 
 
 // ----------------------------------

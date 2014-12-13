@@ -23,23 +23,21 @@
  */
 // This function does not exist in Moodle 2.0 try to simulate functionality for it
 // get_module_types_names
-if(!function_exists("get_module_types_names")){
-    function get_module_types_names($plural = false){
-        static $modnames = null;
-        global $DB, $CFG;
-        if ($modnames === null) {
-            $modnames = array(0 => array(), 1 => array());
-            if ($allmods = $DB->get_records("modules")) {
-                foreach ($allmods as $mod) {
-                    if (file_exists("$CFG->dirroot/mod/$mod->name/lib.php") && $mod->visible) {
-                        $modnames[0][$mod->name] = get_string("modulename", "$mod->name");
-                        $modnames[1][$mod->name] = get_string("modulenameplural", "$mod->name");
-                    }
+function moodle_pre24_get_module_types_names($plural = false){
+    static $modnames = null;
+    global $DB, $CFG;
+    if ($modnames === null) {
+        $modnames = array(0 => array(), 1 => array());
+        if ($allmods = $DB->get_records("modules")) {
+            foreach ($allmods as $mod) {
+                if (file_exists("$CFG->dirroot/mod/$mod->name/lib.php") && $mod->visible) {
+                    $modnames[0][$mod->name] = get_string("modulename", "$mod->name");
+                    $modnames[1][$mod->name] = get_string("modulenameplural", "$mod->name");
                 }
-                asort($modnames[0]);
-                asort($modnames[1]);
             }
+            asort($modnames[0]);
+            asort($modnames[1]);
         }
-        return $modnames[(int)$plural];
     }
+    return $modnames[(int)$plural];
 }

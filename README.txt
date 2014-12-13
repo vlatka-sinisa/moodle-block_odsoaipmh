@@ -30,12 +30,11 @@ OAI-PMH target
 Installation
 ============
 Using standard Moodle installation procedure
-
+https://moodle.org/plugins/view.php?plugin=block_odsoaipmh
 
 Uninstallation
 ==============
 Using standard Moodle uninstallation procedure
-
 
 Configuration
 =============
